@@ -1,190 +1,152 @@
 #include <iostream>
-
 using namespace std;
-class Node
-{
-    public:
+
+class Node {
+public:
     int roll;
     string name;
     string branch;
     int marks;
-    Node*next;
+    Node* next;
 };
-Node* head=new Node();
 
-bool check(int x)
-{
-    if(head==NULL)
-    {
-        return false;
-    }
-    Node*temp=head;
-    while(!temp)
-    {
-        if(head->roll==x)
-        {
+Node* head = nullptr;
+
+bool check(int x) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        if (temp->roll == x) {
             return true;
         }
-        temp=temp->next;
+        temp = temp->next;
     }
     return false;
 }
-void insert(int roll,string name,string branch,int marks)
-{
-    if(check(roll))
-    {
-        cout<<"this data is already found"<<endl;
+
+void insert(int roll, string name, string branch, int marks) {
+    if (check(roll)) {
+        cout << "This data already exists.\n";
         return;
     }
-    Node* t=new Node();
-    t->roll=roll;
-    t->name=name;
-    t->branch=branch;
-    t->marks=marks;
-    if(head==NULL || head->roll >= t->roll)
-    {
-        t->next=head;
-        head=t;
-    }
-    else{
-        Node*c=head;
-        while(c->next!=NULL || head->roll<=t->roll)
-        {
-            c=c->next;
+
+    Node* t = new Node();
+    t->roll = roll;
+    t->name = name;
+    t->branch = branch;
+    t->marks = marks;
+    t->next = nullptr;
+
+    if (head == nullptr || head->roll >= t->roll) {
+        t->next = head;
+        head = t;
+    } else {
+        Node* c = head;
+        while (c->next != nullptr && c->next->roll <= t->roll) {
+            c = c->next;
         }
-        t->next=c->next;
-        c->next=t;
+        t->next = c->next;
+        c->next = t;
     }
-    cout<<"the data is inserted"<<endl;
+    cout << "The data has been inserted.\n";
 }
 
-void search(int roll)
-{
-    if(head==NULL)
-    {
-        cout<<"data is not found"<<endl;
+void search(int roll) {
+    Node* p = head;
+    while (p != nullptr) {
+        if (p->roll == roll) {
+            cout << "Roll Number: " << p->roll << endl;
+            cout << "Name: " << p->name << endl;
+            cout << "Branch: " << p->branch << endl;
+            cout << "Marks: " << p->marks << endl;
+            return;
+        }
+        p = p->next;
+    }
+    cout << "Data not found.\n";
+}
+
+void delete_record(int roll) {
+    if (head == nullptr) {
+        cout << "No records to delete.\n";
         return;
     }
-    Node*p=head;
-    while(p)
-    {
-         if(p->roll==roll)
-         {
-             cout << "Roll Number\t"
-                     << p->roll << endl;
-                cout << "Name\t\t"
-                     << p->name << endl;
-                cout << "branch\t"
-                     << p->branch << endl;
-                cout << "Marks\t\t"
-                     << p->marks << endl;
-                return;
-         }
-         p=p->next;
-    }
-    
-}
-void delete_record(int roll)
-{
-    Node *t=head;
-    Node*p=NULL;
-    
-    if(t==NULL && t->roll==roll)
-    {
-        head=t->next;
+
+    Node* t = head;
+    Node* p = nullptr;
+
+    if (t->roll == roll) {
+        head = t->next;
         delete t;
-        cout<<"record deleted"<<endl;
+        cout << "Record deleted.\n";
         return;
     }
-    while(t->next!=NULL && t->roll!=roll)
-    {
-        p=t;
-        t=t->next;
+
+    while (t != nullptr && t->roll != roll) {
+        p = t;
+        t = t->next;
     }
-    if(p==NULL)
-    {
-        cout<<"record not found"<<endl;
+
+    if (t == nullptr) {
+        cout << "Record not found.\n";
+        return;
     }
-    head->next=t->next;
-    
+
+    p->next = t->next;
     delete t;
-    
-    cout<<"record deleted"<<endl;
-    
+    cout << "Record deleted.\n";
 }
-void show()
-{
- Node* p = head;
-    if (p == NULL) {
-        cout << "No Record "
-             << "Available\n";
-    }
-    else {
-        cout << "Index\tName\tCourse"
-             << "\tMarks\n";
- 
-        // Until p is not NULL
-        while (p != NULL) {
-            cout << p->roll << "    \t"
-                 << p->name << "\t"
-                 << p->branch << "\t"
-                 << p->marks << endl;
+
+void show() {
+    Node* p = head;
+    if (p == nullptr) {
+        cout << "No records available.\n";
+    } else {
+        cout << "Roll\tName\tBranch\tMarks\n";
+        while (p != nullptr) {
+            cout << p->roll << "\t" << p->name << "\t" << p->branch << "\t" << p->marks << endl;
             p = p->next;
         }
     }
-    
 }
 
-int main(){
-    head = NULL;
+int main() {
     string name, branch;
     int roll, marks;
- 
+
     while (true) {
-        cout << "\n\t\tWelcome to Academic Information "
-                "System\n\n\tPress\n\t1 to "
-                "create a new Record\n\t2 to delete a "
-                "student record\n\t3 to Search a Student "
-                "Record\n\t4 to view all students "
-                "record\n\t5 to Exit\n";
-        cout << "\nEnter your Choice\n";
+        cout << "\n\t\tWelcome to Academic Information System\n\n";
+        cout << "\tPress\n\t1 to create a new Record\n\t2 to delete a student record\n";
+        cout << "\t3 to Search a Student Record\n\t4 to view all student records\n\t5 to Exit\n";
+        cout << "\nEnter your Choice: ";
         int Choice;
- 
-        // Enter Choice
         cin >> Choice;
+
         if (Choice == 1) {
-            cout << "Enter Name of Student\n";
+            cout << "Enter Name of Student: ";
             cin >> name;
-            cout << "Enter Roll Number of Student\n";
+            cout << "Enter Roll Number of Student: ";
             cin >> roll;
-            cout << "Enter Course of Student \n";
+            cout << "Enter Branch of Student: ";
             cin >> branch;
-            cout << "Enter Total Marks of Student\n";
+            cout << "Enter Total Marks of Student: ";
             cin >> marks;
             insert(roll, name, branch, marks);
-        }
-        else if (Choice == 2) {
-            cout << "Enter Roll Number of Student whose "
-                    "record is to be deleted\n";
+        } else if (Choice == 2) {
+            cout << "Enter Roll Number of Student whose record is to be deleted: ";
             cin >> roll;
             delete_record(roll);
-        }
-        else if (Choice == 3) {
-            cout << "Enter Roll Number of Student whose "
-                    "record you want to Search\n";
+        } else if (Choice == 3) {
+            cout << "Enter Roll Number of Student whose record you want to search: ";
             cin >> roll;
             search(roll);
-        }
-        else if (Choice == 4) {
+        } else if (Choice == 4) {
             show();
-        }
-        else if (Choice == 5) {
+        } else if (Choice == 5) {
             exit(0);
-        }
-        else {
-            cout << "Invalid Choice "
-                 << "Try Again\n";
+        } else {
+            cout << "Invalid Choice. Try Again.\n";
         }
     }
+
     return 0;
 }
